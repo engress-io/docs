@@ -6,16 +6,19 @@ on:
 
 permissions:
   id-token: write
-  contents: read
+  contents: write
 
 env:
   AWS_REGION: us-east-2
-  DOCS_BUCKET: flux-docs-327796148992
+  DOCS_BUCKET: flux-spa-327796148992
   APP_CF_DISTRIBUTION_ID: E1ABUIC4DB7I86
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: write
     steps:
       - uses: actions/checkout@v4
 
@@ -37,10 +40,20 @@ jobs:
 
       - name: Sync docs to S3
         run: |
-          aws s3 sync build/ s3://${{ env.DOCS_BUCKET }}/ --delete
+          aws s3 sync build/ s3://${{ env.DOCS_BUCKET }}/docs/ --delete
 
       - name: Invalidate CloudFront
         run: |
           aws cloudfront create-invalidation \
             --distribution-id ${{ env.APP_CF_DISTRIBUTION_ID }} \
             --paths "/docs/*"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          body: |
+            ## Engress Docs ${{ github.ref_name }}
+
+            - Docs deployed to: https://engress.io/docs/
+            - CloudFront distribution `${{ env.APP_CF_DISTRIBUTION_ID }}` invalidated at `/docs/*`
