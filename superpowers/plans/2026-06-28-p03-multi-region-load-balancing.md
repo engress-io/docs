@@ -19,7 +19,18 @@
 
 ---
 
-## Operator checklist
+## Operator one-liner
+
+```bash
+./scripts/agent/dispatch-ops.sh p03-rollout              # through GA + dns audit (dry-run DNS)
+./scripts/agent/dispatch-ops.sh p03-rollout dns=apply    # live Spaceship *.edge → GA anycast
+```
+
+With `AWS_PROFILE=ghostweasel-flux` + SSO, runs locally. Otherwise dispatches to GitHub Actions (OIDC).
+
+---
+
+## Operator checklist (step-by-step)
 
 ### Phase 0 — Prerequisites
 
