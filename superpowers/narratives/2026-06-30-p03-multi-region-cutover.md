@@ -1,5 +1,7 @@
 # P03 Multi-Region Cutover — Runbook & Smoke Matrix
 
+**Status:** ✅ Cutover complete (2026-06-30) — `*.edge.engress.io` → GA anycast; `engress-west` edge-only; core remains east.
+
 **Narrative (story + status):** [2026-06-30-p03-multi-region-load-balancing.md](./2026-06-30-p03-multi-region-load-balancing.md)
 
 **Plan:** `docs/superpowers/plans/2026-06-28-p03-multi-region-load-balancing.md`

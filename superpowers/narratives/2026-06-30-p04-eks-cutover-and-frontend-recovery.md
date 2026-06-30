@@ -122,9 +122,9 @@ curl -sS -o /dev/null -w '%{http_code}\n' https://engress.io/
 |-------|--------|
 | `engress.io` | New CloudFront distribution (`terraform output cloudfront_domain`) |
 | `/api/*` | CloudFront → `core-origin.engress.io` → EKS core ALB |
-| `*.edge.engress.io` | EKS edge NLB (DNS cutover complete) |
+| `*.edge.engress.io` | Global Accelerator anycast A → east + west edge NLBs (P03, 2026-06-30) |
 | SPA assets | S3 `flux-spa-327796148992` (unchanged) |
-| Compute | EKS `engress-east` only — EC2 decommissioned |
+| Compute | EKS `engress-east` (core + edge) + `engress-west` (edge only) |
 
 ---
 

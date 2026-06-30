@@ -80,7 +80,7 @@ GitHub deploy role gets EKS cluster admin via access entries so `helm upgrade` w
 ### Remaining
 
 - 🔲 Apply `github_ops.tf` so GHA can run Terraform without laptop SSO
-- 🔲 us-west-1 region (P03 multi-region)
+- ✅ us-west-1 region (P03 multi-region) — applied 2026-06-30
 - 🔲 Optional: Amplify SPA migration (blocked on org deploy keys)
 
 ## Files changed
