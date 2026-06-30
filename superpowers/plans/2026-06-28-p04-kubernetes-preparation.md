@@ -145,4 +145,4 @@ terraform apply -var="enable_eks=true" -var="decommission_ec2=true" -var="deploy
 | EC2 decommission | ✅ `decommission_ec2=true` |
 | Frontend recovery (bad decommission) | ✅ See narrative `2026-06-30-p04-eks-cutover-and-frontend-recovery.md` |
 | GHA Terraform state access (`github_ops`) | 🔲 One local apply needed |
-| us-west-1 multi-region (P03) | 🔲 Future |
+| us-west-1 multi-region (P03) | ✅ Code ready — see `docs/superpowers/plans/2026-06-28-p03-multi-region-load-balancing.md` |
