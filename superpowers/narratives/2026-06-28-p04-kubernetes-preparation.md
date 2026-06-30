@@ -4,6 +4,8 @@
 
 EC2 docker-compose got engress to production. Phase 4 is the move to EKS: stateless pods, Helm deploys, IRSA for secrets, and one place for deploy configuration.
 
+**Cutover completed 2026-06-30.** See [EKS cutover & frontend recovery](./2026-06-30-p04-eks-cutover-and-frontend-recovery.md) for the decommission incident and CloudFront recovery.
+
 ## The GitHub secrets question
 
 The original P04 runbook listed five GitHub secrets:
@@ -48,45 +50,45 @@ GitHub deploy role gets EKS cluster admin via access entries so `helm upgrade` w
 
 - `eks-migrate.sh` — runbook wrapper for state bootstrap, EKS apply, deploy-target flip, EC2 decommission
 - `terraform-state-bootstrap.sh` — one-time S3 backend bootstrap
+- `fix-cloudfront-recovery.sh` — two-phase CloudFront recovery after bad decommission
+- `dispatch-ops.sh` — `fix-lbs`, `dns-audit`, `recover-frontend`, `decommission-ec2`
 
 ## Migration sequence (operator)
 
 1. `./scripts/deploy/scripts/eks-migrate.sh state-bootstrap`
 2. `./scripts/deploy/scripts/eks-migrate.sh apply-eks`
 3. Set GitHub secret `AWS_DEPLOY_ROLE_ARN` only
-4. Install LBC + metrics-server on cluster
+4. Install LBC + metrics-server on cluster (`dispatch-ops.sh install-addons`)
 5. Push to `main` → K8s workflow deploys Helm releases
 6. `eks-migrate.sh deploy-target both` → validate parallel
-7. Cut DNS / Global Accelerator to EKS NLBs + ALBs (P03)
-8. `eks-migrate.sh decommission-ec2`
+7. Cut DNS to EKS ALBs/NLBs (`dispatch-ops.sh dns-audit`)
+8. `eks-migrate.sh decommission-ec2` — **requires complete `terraform.tfvars`** (see recovery narrative)
 
-## What's done vs remaining
+## Status (2026-06-30)
 
-### Done (code)
+### Done
 
-- ✅ S3 backend configuration + bootstrap script
-- ✅ EKS Terraform module with IRSA
-- ✅ SSM-first deploy config (no IRSA/host GitHub secrets)
-- ✅ Helm charts for core + edge
-- ✅ deploy-k8s GitHub Actions workflow
-- ✅ CI workflow reads SSM deploy target
-- ✅ Operator runbook scripts
+- ✅ S3 remote state backend
+- ✅ EKS cluster `engress-east` + IRSA
+- ✅ SSM deploy config (`engress-deploy-target=eks`)
+- ✅ Helm charts + deploy-k8s workflow
+- ✅ LBC fix + ALB/NLB provisioned
+- ✅ DNS cutover to EKS load balancers
+- ✅ EC2 decommissioned
+- ✅ `https://engress.io` restored after CloudFront recovery
 
-### Remaining (operator / depends on P03)
+### Remaining
 
-- 🔲 Run `terraform apply -var enable_eks=true` in production
-- 🔲 Install AWS Load Balancer Controller on cluster
-- 🔲 First Helm deploy + pod verification
-- 🔲 DNS / Global Accelerator cutover
-- 🔲 EC2 decommission after 24h soak
+- 🔲 Apply `github_ops.tf` so GHA can run Terraform without laptop SSO
 - 🔲 us-west-1 region (P03 multi-region)
+- 🔲 Optional: Amplify SPA migration (blocked on org deploy keys)
 
 ## Files changed
 
-- `core/deploy/terraform/{state,vpc,eks,deploy-config}.tf`
-- `core/deploy/terraform/{variables,main,control,github}.tf`
+- `core/deploy/terraform/{state,vpc,eks,deploy-config,frontend}.tf`
+- `core/deploy/terraform/fix-cloudfront-recovery.sh`
 - `charts/engress-{edge,core}/`
-- `.github/workflows/{ci,deploy-k8s}.yml`
-- `scripts/deploy/lib/ssm-deploy-config.sh`
-- `scripts/deploy/scripts/{helm-deploy-eks,eks-migrate,terraform-state-bootstrap}.sh`
-- `scripts/deploy/scripts/smoke-test.sh`
+- `.github/workflows/{ci,deploy-k8s,ops}.yml`
+- `scripts/deploy/lib/{ssm-deploy-config,terraform-tfvars}.sh`
+- `scripts/deploy/scripts/{helm-deploy-eks,eks-migrate,recover-frontend-terraform,ops-terraform}.sh`
+- `scripts/agent/dispatch-ops.sh`

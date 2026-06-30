@@ -132,16 +132,17 @@ terraform apply -var="enable_eks=true" -var="decommission_ec2=true" -var="deploy
 
 ---
 
-## Status
+## Status (2026-06-30)
 
 | Step | Status |
 |------|--------|
-| S3 remote state backend config | ✅ `backend.tf` + `state.tf` |
-| EKS Terraform (gated `enable_eks`) | ✅ Code complete |
-| SSM deploy config (replaces GitHub secrets) | ✅ Code complete |
-| Helm charts | ✅ Code complete |
-| deploy-k8s workflow | ✅ Code complete |
-| Cluster add-ons install | 🔲 Operator (one-time) |
-| `terraform apply enable_eks=true` | 🔲 Operator |
-| DNS / GA cutover | 🔲 Operator (depends on P03) |
-| EC2 decommission | 🔲 Operator (after cutover) |
+| S3 remote state backend config | ✅ |
+| EKS Terraform (`enable_eks=true`) | ✅ Applied — cluster `engress-east` |
+| SSM deploy config | ✅ `engress-deploy-target=eks` |
+| Helm charts + deploy-k8s workflow | ✅ |
+| Cluster add-ons (LBC, metrics-server) | ✅ `fix-lbs` |
+| DNS cutover to EKS ALBs/NLBs | ✅ `dns-audit` |
+| EC2 decommission | ✅ `decommission_ec2=true` |
+| Frontend recovery (bad decommission) | ✅ See narrative `2026-06-30-p04-eks-cutover-and-frontend-recovery.md` |
+| GHA Terraform state access (`github_ops`) | 🔲 One local apply needed |
+| us-west-1 multi-region (P03) | 🔲 Future |
