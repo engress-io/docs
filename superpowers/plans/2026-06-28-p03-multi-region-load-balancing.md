@@ -145,4 +145,4 @@ See smoke matrix in `docs/superpowers/narratives/2026-06-30-p03-multi-region-cut
 | Ops workflow (west + GA actions) | ✅ Code |
 | GA DNS scripts | ✅ Code |
 | Neon read replica (core code) | ✅ Code (optional west core) |
-| Production apply + cutover | 🔲 Operator |
+| Production apply + cutover | ✅ Applied 2026-06-30 (`dns-cutover-ga-apply`, `engress-west`, GA anycast) |
