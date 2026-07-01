@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "sync-atlas": "bash scripts/sync-atlas.sh",
+    "prebuild": "npm run sync-atlas",
+    "prestart": "npm run sync-atlas",
     "start": "docusaurus start",
     "build": "docusaurus build",
     "serve": "docusaurus serve",
@@ -10,10 +13,15 @@
     "typecheck": "tsc"
   },
   "dependencies": {
+    "@clerk/react": "^6.10.4",
     "@docusaurus/core": "^3.7.0",
     "@docusaurus/preset-classic": "^3.7.0",
+    "@docusaurus/theme-mermaid": "^3.7.0",
+    "@easyops-cn/docusaurus-search-local": "^0.55.2",
+    "@mermaid-js/layout-elk": "^0.1.9",
     "@mdx-js/react": "^3.1.0",
     "clsx": "^2.1.1",
+    "docusaurus-plugin-copy-page-button": "^0.8.3",
     "prism-react-renderer": "^2.4.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
@@ -22,6 +30,7 @@
     "@docusaurus/module-type-aliases": "^3.7.0",
     "@docusaurus/tsconfig": "^3.7.0",
     "@docusaurus/types": "^3.7.0",
+    "docusaurus-plugin-llms": "^0.4.0",
     "typescript": "~5.8.3"
   },
   "engines": {

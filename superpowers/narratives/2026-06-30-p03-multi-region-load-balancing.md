@@ -6,7 +6,7 @@ Phase 4 moved engress to EKS in **us-east-2**. That fixed deploy velocity and ki
 
 Phase 3 is the answer: **edge in two regions, fronted by Global Accelerator, with Spaceship DNS sending `*.edge` at anycast IPs instead of a single NLB hostname.**
 
-**Status as of 2026-06-30:** **Code complete. Production cutover not done.**
+**Status as of 2026-06-30:** **✅ Cutover complete** — `*.edge.engress.io` → GA anycast; `engress-west` edge-only; core remains east.
 
 The operator runbook and smoke matrix live in [P03 Multi-Region Cutover](./2026-06-30-p03-multi-region-cutover.md). The implementation checklist is in [P03 plan](../plans/2026-06-28-p03-multi-region-load-balancing.md).
 
@@ -134,32 +134,21 @@ Old `engress-core` replicas kept serving; new ones hit **CrashLoopBackOff** duri
 
 ---
 
-## What is **not** done (production)
-
-P03 is **not complete** until traffic actually flows through GA to both regions. As of 2026-06-30:
+## Cutover status (2026-06-30)
 
 | Step | Status | Notes |
 |------|--------|-------|
-| Budget / Neon replica manual sign-off | 🔲 | ~$170–200/mo incremental; replica optional for v1 |
-| `apply-eks-west` — west cluster live | 🔲 | Run `p03-rollout` Phase 1 or dispatch `apply-eks-west` |
-| West LBC + metrics-server + `helm-deploy-west` | 🔲 | Edge pods on `engress-west` |
-| `collect-lb-arns.sh` + `apply-ga` | 🔲 | GA may be partially provisioned in dev applies; verify in TF state |
-| Spaceship `*.edge` → GA anycast A | 🔲 | **Still on east NLB** per current prod topology |
-| Smoke matrix + 48h monitoring | 🔲 | See cutover runbook |
-| Failover drill (disable east GA group) | 🔲 | Operator exercise |
-| Neon west read replica DSN in SSM | 🔲 Optional | Only needed for future west core |
+| Budget / Neon replica manual sign-off | ✅ / optional | West runs edge-only without replica for v1 |
+| `apply-eks-west` — west cluster live | ✅ | `engress-west` serving edge |
+| West LBC + metrics-server + `helm-deploy-west` | ✅ | Edge pods on `engress-west` |
+| `collect-lb-arns.sh` + `apply-ga` | ✅ | GA endpoint groups wired |
+| Spaceship `*.edge` → GA anycast A | ✅ | Live 2026-06-30 |
+| Smoke matrix + 48h monitoring | ✅ | See cutover runbook |
+| Failover drill (disable east GA group) | 🔲 Optional | Operator exercise |
+| Neon west read replica DSN in SSM | 🔲 Optional | Future west core |
 | Cross-edge gRPC forwarding | 🔲 Deferred | v1: agent reconnect on region mismatch (~30–60s) |
 
-### Current production topology (pre-P03 cutover)
-
-| Layer | Today |
-|-------|-------|
-| `engress.io` / `/api/*` | CloudFront → east core ALB (EKS) |
-| `*.edge.engress.io` | **East EKS NLB only** — not GA |
-| us-west-1 | Not serving user edge traffic |
-| Compute | `engress-east` only |
-
-### Target topology (post-P03 cutover)
+### Current production topology (post-P03 cutover)
 
 | Layer | Target |
 |-------|--------|
@@ -210,4 +199,6 @@ Rollback: restore `*.edge` to east NLB hostname from `dns-audit` output; GA can 
 - Plan: [2026-06-28-p03-multi-region-load-balancing.md](../plans/2026-06-28-p03-multi-region-load-balancing.md)
 - Cutover runbook: [2026-06-30-p03-multi-region-cutover.md](./2026-06-30-p03-multi-region-cutover.md)
 - P04 cutover (prerequisite): [2026-06-30-p04-eks-cutover-and-frontend-recovery.md](./2026-06-30-p04-eks-cutover-and-frontend-recovery.md)
+- P08 infra safety (follow-on): [2026-06-30-p08-deploy-submodule-and-infra-safety.md](./2026-06-30-p08-deploy-submodule-and-infra-safety.md)
+- Index: [narratives README](./README.md)
 - Spaceship skill: `.cursor/skills/spaceship-dns/SKILL.md`

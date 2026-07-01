@@ -60,6 +60,8 @@ See [Integrations](/integrations) for the full list.
 | Command | Description |
 |---------|-------------|
 | `engress http <port>` | Tunnel a local port (default workflow) |
+| `engress tcp <port>` | Raw TCP tunnel |
+| `engress udp <port>` | Raw UDP tunnel |
 | `engress login` / `--login` | Browser sign-in and endpoint link |
 | `engress endpoints list` | List endpoints from your last link |
 | `engress launch <tool>` | Setup steps for Cursor, Claude Code, etc. |

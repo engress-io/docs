@@ -2,6 +2,8 @@
 
 **Status:** Implementation complete (2026-06-30)
 
+**Narrative:** [2026-06-30-p05-monitoring-oasis-dashboard.md](../narratives/2026-06-30-p05-monitoring-oasis-dashboard.md)
+
 ---
 
 ## What Oasis shows

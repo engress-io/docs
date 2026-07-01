@@ -4,7 +4,7 @@ sidebar_position: 1
 title: Overview
 ---
 
-<span className="pill">DOCS</span>
+<span className="pill pill-synthesis">DOCS</span>
 
 # Engress
 
@@ -12,11 +12,15 @@ Expose a local AI model over HTTPS without opening inbound ports. Install **engr
 
 ## Quick start
 
+<div className="terminal-block">
+
 ```bash
 brew install engress-io/tap/engress
 engress login
 engress http 11434
 ```
+
+</div>
 
 Prefer a guided install? Use the [downloads page](/downloads) or [engress.io/downloads](https://engress.io/downloads).
 
@@ -26,9 +30,16 @@ Prefer a guided install? Use the [downloads page](/downloads) or [engress.io/dow
 2. You pick or create an **endpoint** in the browser — each gets a unique `https://<name>.edge.engress.io` URL.
 3. Point your AI tool at that URL. Engress forwards traffic to your local port.
 
+Read the full [architecture guide](/how-it-works) or browse the [FAQ](/faq).
+
 ## Guides
 
 <div className="card-grid">
+
+<a className="doc-card" href="./how-it-works">
+  <h3>How it works</h3>
+  <p>Outbound tunnels, HTTPS endpoints, and how traffic flows from your machine to clients.</p>
+</a>
 
 <a className="doc-card" href="./downloads">
   <h3>Downloads</h3>

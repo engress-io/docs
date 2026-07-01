@@ -1,0 +1,165 @@
+---
+title: Secrets and configuration
+sidebar_position: 8
+---
+
+# Secrets and configuration
+
+**Last verified:** 2026-07-01
+
+**Security note:** This document lists parameter **names** and env var names only. Never commit secret values.
+
+**Live inventory:** see [appendix-live.md](appendix-live.md) for SSM names discovered 2026-07-01.
+
+## SSM parameters — application secrets
+
+Defined in `core/internal/config/secrets.go`:
+
+| Parameter | Used by | Purpose |
+|-----------|---------|---------|
+| `neon-db-connection-string` | engress-core | Postgres DSN (Neon) |
+| `neon-db-read-replica-west-connection-string` | engress-core (optional) | West read replica DSN |
+| `clerk-secret-key` | engress-core | Clerk JWT verify |
+| `next-clerk-publishable-key` | SPA build, core | Clerk publishable key |
+| `clerk-webhook-secret` | engress-core | Clerk webhook Svix secret |
+| `engress-metrics-ingest-secret` | core + edge | Edge → core metrics auth |
+| `engress-github-dispatch-token` | core | GitHub dispatch API |
+| `engress-tunnel-ca-cert-pem` | core + edge | Tunnel CA certificate |
+| `engress-tunnel-ca-key-pem` | core + edge | Tunnel CA private key |
+| `engress-session-key` | engress-core | Legacy session encryption |
+| `engress-neon-db-connection-string` | engress-core | Alternate Neon DSN param name (SSM) |
+| `engress-clerk-publishable-key` | SPA build | Clerk publishable key (SSM) |
+| `engress-source-checkout-token` | CI/checkout | Source checkout token |
+| `engress-github-read-token` | CI | GitHub read API |
+
+## SSM parameters — deploy config (Terraform-managed)
+
+From `core/deploy/terraform/deploy-config.tf`:
+
+| Parameter | Purpose |
+|-----------|---------|
+| `engress-deploy-github-role-arn` | GHA OIDC role ARN |
+| `engress-deploy-edge-ip` | Legacy edge IP (stale after EC2 decommission) |
+| `engress-deploy-core-ip` | Legacy core IP |
+| `engress-deploy-edge-host` | Edge origin hostname |
+| `engress-deploy-core-host` | Core origin hostname |
+| `engress-deploy-target` | `ec2` \| `eks` \| `both` |
+| `engress-deploy-eks-cluster-name` | East cluster name |
+| `engress-deploy-core-irsa-arn` | Core IRSA role ARN |
+| `engress-deploy-edge-irsa-arn` | Edge IRSA role ARN |
+| `engress-deploy-lbc-irsa-arn` | LBC IRSA role ARN |
+| `engress-deploy-eks-west-cluster-name` | West cluster name |
+| `engress-deploy-edge-west-irsa-arn` | West edge IRSA |
+| `engress-deploy-core-west-irsa-arn` | West core IRSA (unused — core east-only) |
+| `engress-deploy-lbc-west-irsa-arn` | West LBC IRSA |
+| `engress-deploy-aws-region-west` | `us-west-1` |
+| `engress-deploy-global-accelerator-ips` | GA anycast IPs (comma-separated) |
+
+## SSM parameters — operator-managed
+
+| Parameter | Purpose |
+|-----------|---------|
+| `engress-terraform-tfvars` | Full Terraform intent flags (SecureString) |
+| `engress-deploy-east-nlb-arn` | East edge NLB ARN for GA |
+| `engress-deploy-west-nlb-arn` | West edge NLB ARN |
+| `engress-deploy-east-edge-alb-arn` | East edge ALB ARN |
+| `engress-deploy-west-edge-alb-arn` | West edge ALB ARN |
+| `engress-deploy-cloudfront-distribution-id` | CloudFront ID for SPA deploy |
+| `engress-cloudfront-distribution-id` | Alternate CF ID param |
+| `engress-github-read-token` | GitHub read API (legacy) |
+
+## SSM resolution
+
+Enabled when:
+
+- `ENGRESS_USE_SSM=1` or `FLUX_USE_SSM=1`, or
+- `AWS_REGION` set (auto on EC2; **disabled** on EKS edge: `FLUX_USE_SSM=0`)
+
+Code: `core/internal/config/secrets.go` → `shouldUseSSM()`
+
+## Runtime environment variables
+
+### engress-core
+
+| Env var | Purpose |
+|---------|---------|
+| `CLERK_SECRET_KEY` | Clerk backend secret |
+| `CLERK_WEBHOOK_SECRET` | Webhook signing |
+| `FLUX_SESSION_KEY` / `ENGRESS_SESSION_KEY` | Session encryption |
+| `ENGRESS_CORS_ORIGIN` | Allowed CORS origin (`https://engress.io`) |
+| `FLUX_CONTROL_ORIGIN_HOST` | Host header for CF `/api/*` proxy |
+
+### engress-edge
+
+| Env var | Purpose |
+|---------|---------|
+| `FLUX_CONTROL_API_URL` | Core API URL (in-cluster or `https://core-origin.engress.io`) |
+| `FLUX_METRICS_API_URL` | Metrics ingest URL |
+| `FLUX_CONTROL_ORIGIN_HOST` | Origin host header |
+| `FLUX_METRICS_INGEST_SECRET` | From K8s secret |
+| `FLUX_TUNNEL_CA_CERT` / `FLUX_TUNNEL_CA_KEY` | Tunnel CA paths |
+
+### SPA build (CI)
+
+| Env var | Purpose |
+|---------|---------|
+| `VITE_CLERK_PUBLISHABLE_KEY` | Clerk React provider |
+| `VITE_CLERK_SIGN_UP_ENABLED` | Gate sign-up route |
+
+### Agent (local)
+
+| Env var | Purpose |
+|---------|---------|
+| `ENGRESS_AGENT_PLAIN=1` | Disable TUI (CI) |
+
+## Config files
+
+### edge.yaml (Helm ConfigMap)
+
+```yaml
+http_addr: ":80"
+https_addr: ":443"
+tunnel_addr: ":4433"
+domain_suffix: ".edge.engress.io"
+base_domain: "engress.io"
+mtls_mode: "required"
+db:
+  driver: sqlite
+  dsn: "/data/engress.db"
+```
+
+Template: `charts/engress-edge/templates/configmap.yaml`
+
+### api.yaml (core)
+
+```yaml
+listen_addr: ":8080"
+base_domain: "engress.io"
+cors_origin: "https://engress.io"
+db:
+  driver: postgres  # DSN from SSM at runtime
+```
+
+Generated by `scripts/deploy/lib/config.sh`
+
+## Terraform tfvars
+
+Live copy: SSM `engress-terraform-tfvars`  
+Example: `deploy/terraform/env/prod.tfvars.example`
+
+**Rule:** Never pass partial `-var enable_*` overrides — SSM is sole intent source.
+
+## Cursor / GHA secrets (third-party)
+
+| Secret name | Service |
+|-------------|---------|
+| `CLERK_SECRET_KEY`, `CLERK_PUBLISHABLE_KEY` | Clerk |
+| `SPACESHIP_API`, `SPACESHIP_SECRET` | Spaceship DNS |
+| `AWS_DEPLOY_ROLE_ARN` | GitHub → AWS OIDC bootstrap |
+
+See [08-third-party](08-third-party.md).
+
+## Related docs
+
+- [core-docs/security.md](../core-docs/security.md) — trust boundaries
+- [06-cicd-deploy](06-cicd-deploy.md) — how SSM feeds CI

@@ -1,8 +1,10 @@
-# P06 — Deploy Submodule & Infra Safety — Implementation Plan
+# P08 — Deploy Submodule & Infra Safety — Implementation Plan
 
 > **Goal:** Create `engress-io/deploy` submodule, consolidate infrastructure assets, and make accidental destruction structurally difficult.
 
-**Design spec:** `specs/2026-06-30-p06-deploy-submodule-design.md`
+**Design spec:** `specs/2026-06-30-p08-deploy-submodule-design.md`
+
+**Narrative:** [2026-06-30-p08-deploy-submodule-and-infra-safety.md](../narratives/2026-06-30-p08-deploy-submodule-and-infra-safety.md)
 
 **Related incident:** 2026-06-30 west EKS + GA destroyed by `apply-eks` with partial `-var` flags; recovered manually.
 
@@ -36,8 +38,8 @@ Copy structure from design spec (empty stacks, `modules/`, `guards/`, `agents/`)
 ### 0.3 Docs
 
 - [ ] `deploy/README.md` — layer diagram, dispatch cheatsheet
-- [ ] `specs/2026-06-30-p06-deploy-submodule-design.md` (this design)
-- [ ] Update superproject `AGENTS.md` with P06 status block
+- [ ] `specs/2026-06-30-p08-deploy-submodule-design.md` (this design)
+- [ ] Update superproject `AGENTS.md` with P08 status block
 
 **Exit criteria:** Submodule clones; no behavior change.
 
@@ -203,10 +205,10 @@ terraform -chdir="$TF_DIR" apply plan.bin
 
 ### 4.2 Remove shims
 
-- [ ] Delete `charts/` from superproject root
 - [ ] Delete `scripts/deploy/` (or reduce to 3-line exec shims with deprecation warning)
 - [ ] Delete `core/deploy/terraform/` (keep `core/web/` only)
 - [ ] Update `Taskfile.yml` paths
+- [x] **`charts/`** — keep as legacy mirror; canonical charts in `deploy/helm/` (documented in `charts/README.md`; not a separate submodule)
 
 ### 4.3 Operator doc sweep
 
@@ -214,6 +216,49 @@ terraform -chdir="$TF_DIR" apply plan.bin
 - [ ] `.cursor/skills/*` path updates
 
 **Exit criteria:** Grep for `core/deploy/terraform` and `scripts/deploy` returns only historical docs.
+
+---
+
+## Phase 4.5 — Selective deployment (1–2 PRs)
+
+Stop monolithic CI: path changes deploy only the affected component.
+
+### 4.5.1 Deployment matrix
+
+- [ ] `deploy/docs/deployment-matrix.md` — canonical path → action rules
+- [ ] Update `AGENTS.md`, `deploy/README.md`, narrative
+
+### 4.5.2 Component-scoped build + helm
+
+- [ ] `build-push-ecr.sh` — `--core-only` / `--edge-only`
+- [ ] `dispatch-ops.sh` — `helm-deploy-core`, `helm-deploy-edge`
+- [ ] `ops.yml` — new actions; replace inline helm with `helm-deploy-eks.sh`
+- [ ] `fix-lbs` — LBC fix only (no auto full chart redeploy)
+
+### 4.5.3 Change-detected CI
+
+- [ ] `deploy-k8s.yml` — `dorny/paths-filter` + conditional spa/core/edge/helm jobs
+- [ ] `deploy-k8s.yml` — manual `workflow_dispatch` scope=full for full reconcile
+- [ ] `ci.yml` — path filters + selective EC2 deploy
+- [ ] Remove `agent/**`, `scripts/**` from deploy-k8s triggers
+
+### 4.5.4 Agent rules
+
+- [ ] `deploy/AGENTS.md` — deploy-submodule agent contract
+- [ ] Superproject `AGENTS.md` — mandatory dispatch rules + updated ops table
+
+**Exit criteria:** UI-only push runs SPA job only; docs-only push skips deploy; full deploy requires manual dispatch.
+
+### Verification matrix (post Phase 4.5)
+
+| Scenario | Trigger | Expected |
+|----------|---------|----------|
+| Edit `core/web/**` | push main | `deploy-spa` only |
+| Edit `core/**` (not web) | push main | `deploy-core` only |
+| Edit `edge/**` | push main | `deploy-edge` (east + west) |
+| Edit `deploy/helm/**` | push main | `deploy-helm` only |
+| Edit `docs/**` | push main | no deploy workflows |
+| `dispatch-ops.sh spa-deploy` | repository_dispatch | ops spa step only |
 
 ---
 
@@ -267,6 +312,7 @@ terraform -chdir="$TF_DIR" apply plan.bin
 | Keep workflows in superproject | OIDC secrets and repo identity stay at engress-io/engress |
 | Don't move `core/web` | Application source ≠ infrastructure |
 | SSM tfvars as sole intent | Eliminates `-var` foot-gun that caused west destruction |
+| Charts in `deploy/helm/`, not separate submodule | Helm is L3 deploy config bundled with deploy repo; superproject `charts/` stays as legacy shim (deletion deferred) |
 
 ---
 
