@@ -9,12 +9,15 @@ sidebar_position: 3
 
 ## Live DNS snapshot (2026-07-01)
 
-| Hostname | Resolves to |
-|----------|-------------|
-| `engress.io` | `3.175.34.11`, `3.175.34.70`, `3.175.34.20` (CloudFront) |
-| `core-origin.engress.io` | `k8s-engress-engressc-0e6d362187-1276529689.us-east-2.elb.amazonaws.com` |
-| `edge-origin.engress.io` | `k8s-engress-engresse-05043a6385-1111899267.us-east-2.elb.amazonaws.com` |
-| `*.edge.engress.io` (sample) | `166.117.111.75`, `166.117.142.224` (GA anycast) |
+| Hostname | Record | Target |
+|----------|--------|--------|
+| `engress.io` | CNAME | `d1y7wdtfae903c.cloudfront.net` |
+| `core-origin.engress.io` | CNAME | `k8s-engress-engressc-0e6d362187-1276529689.us-east-2.elb.amazonaws.com` |
+| `edge-origin.engress.io` | CNAME | `k8s-engress-engresse-05043a6385-1111899267.us-east-2.elb.amazonaws.com` |
+| `*.edge.engress.io` | A | `166.117.111.75`, `166.117.142.224` (GA anycast) |
+| `clerk.engress.io` | CNAME | `frontend-api.clerk.services` |
+
+**CloudFront:** `E1H1FGG5MSUPN5` → `d1y7wdtfae903c.cloudfront.net`
 
 Full collector output: [appendix-live.md](appendix-live.md)
 

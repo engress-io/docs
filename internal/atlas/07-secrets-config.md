@@ -5,9 +5,11 @@ sidebar_position: 8
 
 # Secrets and configuration
 
-**Last verified:** 2026-06-30
+**Last verified:** 2026-07-01
 
 **Security note:** This document lists parameter **names** and env var names only. Never commit secret values.
+
+**Live inventory:** see [appendix-live.md](appendix-live.md) for SSM names discovered 2026-07-01.
 
 ## SSM parameters — application secrets
 
@@ -25,6 +27,10 @@ Defined in `core/internal/config/secrets.go`:
 | `engress-tunnel-ca-cert-pem` | core + edge | Tunnel CA certificate |
 | `engress-tunnel-ca-key-pem` | core + edge | Tunnel CA private key |
 | `engress-session-key` | engress-core | Legacy session encryption |
+| `engress-neon-db-connection-string` | engress-core | Alternate Neon DSN param name (SSM) |
+| `engress-clerk-publishable-key` | SPA build | Clerk publishable key (SSM) |
+| `engress-source-checkout-token` | CI/checkout | Source checkout token |
+| `engress-github-read-token` | CI | GitHub read API |
 
 ## SSM parameters — deploy config (Terraform-managed)
 

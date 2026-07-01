@@ -14,7 +14,7 @@ fi
 mkdir -p "$DEST"
 
 position=0
-for f in "$SRC"/[0-9]*.md "$SRC"/README.md "$SRC"/appendix-live.md; do
+for f in "$SRC"/[0-9]*.md "$SRC"/README.md "$SRC"/appendix-live.md "$SRC"/appendix-collect-log.md; do
   [[ -f "$f" ]] || continue
   base="$(basename "$f")"
   title="$(head -1 "$f" | sed 's/^# //')"

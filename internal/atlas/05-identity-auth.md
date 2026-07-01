@@ -5,7 +5,7 @@ sidebar_position: 6
 
 # Identity and authentication
 
-**Last verified:** 2026-06-30
+**Last verified:** 2026-07-01
 
 ## Overview
 
@@ -19,6 +19,9 @@ Engress uses layered authentication: Clerk for humans, API keys for machines, co
 | SPA SDK | `@clerk/react` in `core/web/` |
 | Backend SDK | `core/internal/identity/clerk.go` |
 | Webhook route | `POST /api/v1/clerk/webhook` |
+| Custom domain | `clerk.engress.io` |
+| Accounts domain | `accounts.engress.io` |
+| Expected org | `org_3FN4VwPcUUsNUKi0yf6cdFLhG7J` |
 
 ### SSM / env (names only)
 

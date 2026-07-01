@@ -12,9 +12,15 @@ sidebar_position: 4
 | Check | Value |
 |-------|-------|
 | API health | `https://engress.io/api/healthz` → HTTP 200 |
-| Core version | `e8ba319` |
+| Core version | `e8ba319` (image tag in EKS) |
+| Deploy target | `eks` |
+| EKS cluster | `engress-east` (4 nodes, 4/4 Ready) |
+| Core replicas | 2/2 `@ e8ba319` |
+| Edge replicas | 2/2 `@ e8ba319` |
+| CloudFront | `E1H1FGG5MSUPN5` / `d1y7wdtfae903c.cloudfront.net` |
+| GA anycast IPs | `166.117.111.75`, `166.117.142.224` |
+| Edge NLB | `k8s-engress-engresse-07cd533391-9e85f5e66eeb6988.elb.us-east-2.amazonaws.com` |
 | Core ALB | `k8s-engress-engressc-0e6d362187-1276529689.us-east-2.elb.amazonaws.com` |
-| Edge ALB (east) | `k8s-engress-engresse-05043a6385-1111899267.us-east-2.elb.amazonaws.com` |
 
 See [appendix-live.md](appendix-live.md) for full collector output.
 

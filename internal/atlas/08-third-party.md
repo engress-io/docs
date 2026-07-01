@@ -5,7 +5,7 @@ sidebar_position: 9
 
 # Third-party services
 
-**Last verified:** 2026-06-30
+**Last verified:** 2026-07-01
 
 ## Service map
 
@@ -39,9 +39,12 @@ sidebar_position: 9
 
 ## Clerk
 
-| Item | Detail |
-|------|--------|
+| Item | Value |
+|------|-------|
 | Application | Engress (production `pk_live_` / `sk_live_`) |
+| Custom domain | `clerk.engress.io` → `frontend-api.clerk.services` |
+| Accounts domain | `accounts.engress.io` → `accounts.clerk.services` |
+| Expected org | `org_3FN4VwPcUUsNUKi0yf6cdFLhG7J` |
 | SPA integration | `@clerk/react` — `core/web/src/lib/clerk.tsx` |
 | Webhook URL | `https://engress.io/api/v1/clerk/webhook` |
 | Organizations | Enabled for multi-tenant mapping |

@@ -20,6 +20,7 @@ const sidebars: SidebarsConfig = {
         'atlas/09-onboarding',
         'atlas/10-gap-register',
         'atlas/appendix-live',
+        'atlas/appendix-collect-log',
       ],
     },
   ],

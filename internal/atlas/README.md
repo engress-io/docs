@@ -5,7 +5,7 @@ sidebar_position: 12
 
 # Operator Atlas
 
-**Last verified:** 2026-06-30  
+**Last verified:** 2026-07-01  
 **Status:** Canonical operator topology and connection map
 
 The Atlas is the single entry point for understanding how Engress is wired: AWS, DNS, data, auth, CI/CD, and third-party services. It complements (does not replace) phase narratives in [`docs/superpowers/narratives/`](../../docs/superpowers/narratives/README.md).
