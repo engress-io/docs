@@ -25,7 +25,9 @@ sidebar_position: 7
 
 | Workflow | File | Trigger | Target |
 |----------|------|---------|--------|
-| **deploy-k8s** | `.github/workflows/deploy-k8s.yml` | Push `main` (path filter) | EKS — primary |
+| **deploy-staging** | `.github/workflows/deploy-staging.yml` | Push `main` (path filter) | Staging EKS — primary on main |
+| **deploy-production** | `.github/workflows/deploy-production.yml` | After staging success / manual | Production (approval gate) |
+| **deploy-k8s** | `.github/workflows/deploy-k8s.yml` | Manual only | Emergency prod reconcile |
 | **ops** | `.github/workflows/ops.yml` | Manual / `dispatch-ops.sh` | Terraform, Helm, DNS, Clerk, SPA |
 | **ci** | `.github/workflows/ci.yml` | Push `main` | EC2 fallback (only if `engress-deploy-target=ec2`) |
 | **health-check** | `.github/workflows/health-check.yml` | Cron 5 min | `curl https://engress.io/api/healthz` |

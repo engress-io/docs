@@ -20,7 +20,7 @@ sidebar_position: 11
 | G08 | Auth | Legacy Flux naming (`flux_sk_`, `FLUX_*`) | Low | core | Document in glossary; cleanup backlog |
 | G09 | Edge | QUIC implemented but TCP default in prod | Low | edge | Document in atlas 01; enable when ready |
 | G10 | Product | P06 billing tiers not implemented | Planned | product | Spec: `specs/2026-06-28-p06-subscription-tiers-billing-design.md` |
-| G11 | Product | P07 staging/validation not implemented | Planned | infra | Specs in `specs/2026-06-28-p07*.md` |
+| G11 | Product | P07 staging/validation | In progress | infra | P07A code landed; operator setup in `deploy/docs/staging-setup.md` |
 | G12 | DR | Frontend recovery script exists; full DR untested | Medium | ops | Define RTO/RPO; run tabletop |
 | G13 | Monitoring | Oasis only — no Datadog/PagerDuty | Info | — | By design (P05) |
 | G14 | Agent | `future/agent-edge-discovery.md` stale for GA | Low | agent | Update for multi-region or archive |
