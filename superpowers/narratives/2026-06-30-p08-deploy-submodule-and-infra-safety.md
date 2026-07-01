@@ -150,6 +150,25 @@ Phase numbering note: this work was briefly mislabeled **P06**; **P06 is subscri
 | Per-stack Terraform state | 🔲 Operator window |
 | Delete shims / `core/deploy/terraform/` | 🔲 After state split |
 | Oasis infra panel (plan-guard status, tfvars drift) | 🔲 Phase 5 |
+| Selective deployment (Phase 4.5) | ✅ Component-scoped CI + dispatch rules |
+
+---
+
+## Chapter 6: "Stop redeploying everything" (Phase 4.5)
+
+*Trigger: UI change ran full EKS pipeline — east, west, Helm, SPA*
+
+P08 solved **infra safety** (plan-guard, SSM tfvars). It did not solve **workload granularity**: `deploy-k8s.yml` still built both images and rolled east + west + SPA on any matched path.
+
+**Fix:** deployment matrix in `deploy/docs/deployment-matrix.md`:
+
+- `core/web/**` → SPA only
+- `core/**` (backend) → core image + Helm east core
+- `edge/**` → edge image + Helm east edge + west edge
+- `deploy/helm/**` → Helm only (no ECR)
+- Full stack → manual `helm-deploy-all` or workflow_dispatch scope=full
+
+CI uses `dorny/paths-filter` to run only the matching component jobs. Agents get mandatory rules: never dispatch `helm-deploy-all` unless the task explicitly requires it.
 
 ---
 

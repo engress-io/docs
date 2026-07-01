@@ -219,6 +219,49 @@ terraform -chdir="$TF_DIR" apply plan.bin
 
 ---
 
+## Phase 4.5 — Selective deployment (1–2 PRs)
+
+Stop monolithic CI: path changes deploy only the affected component.
+
+### 4.5.1 Deployment matrix
+
+- [ ] `deploy/docs/deployment-matrix.md` — canonical path → action rules
+- [ ] Update `AGENTS.md`, `deploy/README.md`, narrative
+
+### 4.5.2 Component-scoped build + helm
+
+- [ ] `build-push-ecr.sh` — `--core-only` / `--edge-only`
+- [ ] `dispatch-ops.sh` — `helm-deploy-core`, `helm-deploy-edge`
+- [ ] `ops.yml` — new actions; replace inline helm with `helm-deploy-eks.sh`
+- [ ] `fix-lbs` — LBC fix only (no auto full chart redeploy)
+
+### 4.5.3 Change-detected CI
+
+- [ ] `deploy-k8s.yml` — `dorny/paths-filter` + conditional spa/core/edge/helm jobs
+- [ ] `deploy-k8s.yml` — manual `workflow_dispatch` scope=full for full reconcile
+- [ ] `ci.yml` — path filters + selective EC2 deploy
+- [ ] Remove `agent/**`, `scripts/**` from deploy-k8s triggers
+
+### 4.5.4 Agent rules
+
+- [ ] `deploy/AGENTS.md` — deploy-submodule agent contract
+- [ ] Superproject `AGENTS.md` — mandatory dispatch rules + updated ops table
+
+**Exit criteria:** UI-only push runs SPA job only; docs-only push skips deploy; full deploy requires manual dispatch.
+
+### Verification matrix (post Phase 4.5)
+
+| Scenario | Trigger | Expected |
+|----------|---------|----------|
+| Edit `core/web/**` | push main | `deploy-spa` only |
+| Edit `core/**` (not web) | push main | `deploy-core` only |
+| Edit `edge/**` | push main | `deploy-edge` (east + west) |
+| Edit `deploy/helm/**` | push main | `deploy-helm` only |
+| Edit `docs/**` | push main | no deploy workflows |
+| `dispatch-ops.sh spa-deploy` | repository_dispatch | ops spa step only |
+
+---
+
 ## Phase 5 — Optional hardening
 
 - [ ] **Argo CD** — watch `deploy/helm/values-prod.yaml`; CI only pushes images + bumps tag
