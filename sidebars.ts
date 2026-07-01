@@ -3,6 +3,7 @@ import type {SidebarsConfig} from '@docusaurus/plugin-content-docs';
 const sidebars: SidebarsConfig = {
   docs: [
     'index',
+    'how-it-works',
     'downloads',
     'agent',
     {
@@ -21,6 +22,7 @@ const sidebars: SidebarsConfig = {
     },
     'api',
     'security',
+    'faq',
   ],
 };
 
