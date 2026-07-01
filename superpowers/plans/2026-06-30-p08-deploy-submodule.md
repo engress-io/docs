@@ -205,10 +205,10 @@ terraform -chdir="$TF_DIR" apply plan.bin
 
 ### 4.2 Remove shims
 
-- [ ] Delete `charts/` from superproject root
 - [ ] Delete `scripts/deploy/` (or reduce to 3-line exec shims with deprecation warning)
 - [ ] Delete `core/deploy/terraform/` (keep `core/web/` only)
 - [ ] Update `Taskfile.yml` paths
+- [x] **`charts/`** — keep as legacy mirror; canonical charts in `deploy/helm/` (documented in `charts/README.md`; not a separate submodule)
 
 ### 4.3 Operator doc sweep
 
@@ -312,6 +312,7 @@ Stop monolithic CI: path changes deploy only the affected component.
 | Keep workflows in superproject | OIDC secrets and repo identity stay at engress-io/engress |
 | Don't move `core/web` | Application source ≠ infrastructure |
 | SSM tfvars as sole intent | Eliminates `-var` foot-gun that caused west destruction |
+| Charts in `deploy/helm/`, not separate submodule | Helm is L3 deploy config bundled with deploy repo; superproject `charts/` stays as legacy shim (deletion deferred) |
 
 ---
 
