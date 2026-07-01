@@ -3,13 +3,14 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-SRC="$(cd "$ROOT/../internal-docs/atlas" && pwd)"
+SRC="$ROOT/../internal-docs/atlas"
 DEST="$ROOT/internal/atlas"
 
 if [[ ! -d "$SRC" ]]; then
-  echo "sync-atlas: missing $SRC (init internal-docs submodule?)" >&2
-  exit 1
+  echo "sync-atlas: skip — $SRC not found (using committed docs/internal/)"
+  exit 0
 fi
+SRC="$(cd "$SRC" && pwd)"
 
 mkdir -p "$DEST"
 
@@ -28,6 +29,12 @@ for f in "$SRC"/[0-9]*.md "$SRC"/README.md "$SRC"/appendix-live.md "$SRC"/append
     echo ""
     if [[ "$base" == "README.md" ]]; then
       tail -n +1 "$f" | sed '1s/^# Engress Atlas/# Operator Atlas/'
+    elif [[ "$base" == "appendix-collect-log.md" ]]; then
+      echo "Raw collector output (MDX-safe fenced block):"
+      echo ""
+      echo '```text'
+      cat "$f"
+      echo '```'
     else
       cat "$f"
     fi

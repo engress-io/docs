@@ -261,8 +261,8 @@ Expected org:     org_3FN4VwPcUUsNUKi0yf6cdFLhG7J
 
 ```
 engress.io/api/healthz HTTP 200
-```
 {"service":"engress-core","status":"ok","uptime":"1h46m16s","version":"e8ba319"}
+```
 
 ## Next steps
 
