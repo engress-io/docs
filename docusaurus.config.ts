@@ -2,6 +2,11 @@ import {themes as prismThemes} from 'prism-react-renderer';
 import type {Config} from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 
+const clerkPublishableKey =
+  process.env.VITE_CLERK_PUBLISHABLE_KEY ||
+  process.env.CLERK_PUBLISHABLE_KEY ||
+  '';
+
 const config: Config = {
   title: 'Engress',
   tagline: 'Tunnel local AI models over HTTPS',
@@ -17,6 +22,10 @@ const config: Config = {
   organizationName: 'engress-io',
   projectName: 'docs',
 
+  customFields: {
+    clerkPublishableKey,
+  },
+
   i18n: {
     defaultLocale: 'en',
     locales: ['en'],
@@ -27,14 +36,28 @@ const config: Config = {
       'classic',
       {
         docs: {
-          sidebarPath: './sidebars.ts',
+          id: 'public',
+          path: 'docs',
           routeBasePath: '/',
+          sidebarPath: './sidebars.ts',
         },
         blog: false,
         theme: {
           customCss: './src/css/custom.css',
         },
       } satisfies Preset.Options,
+    ],
+  ],
+
+  plugins: [
+    [
+      '@docusaurus/plugin-content-docs',
+      {
+        id: 'internal',
+        path: 'internal',
+        routeBasePath: 'internal',
+        sidebarPath: './sidebars-internal.ts',
+      },
     ],
   ],
 
@@ -47,6 +70,11 @@ const config: Config = {
     navbar: {
       title: 'Engress',
       items: [
+        {
+          to: '/internal',
+          label: 'Internal',
+          position: 'left',
+        },
         {
           href: 'https://engress.io',
           label: 'Dashboard',
@@ -75,6 +103,14 @@ const config: Config = {
           items: [
             {label: 'API', to: '/api'},
             {label: 'Security', to: '/security'},
+            {label: 'FAQ', to: '/faq'},
+          ],
+        },
+        {
+          title: 'Staff',
+          items: [
+            {label: 'Internal docs', to: '/internal'},
+            {label: 'Oasis dashboard', href: 'https://engress.io/oasis'},
           ],
         },
         {
