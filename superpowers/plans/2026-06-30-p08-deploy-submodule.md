@@ -4,6 +4,8 @@
 
 **Design spec:** `specs/2026-06-30-p08-deploy-submodule-design.md`
 
+**Narrative:** [2026-06-30-p08-deploy-submodule-and-infra-safety.md](../narratives/2026-06-30-p08-deploy-submodule-and-infra-safety.md)
+
 **Related incident:** 2026-06-30 west EKS + GA destroyed by `apply-eks` with partial `-var` flags; recovered manually.
 
 ---
