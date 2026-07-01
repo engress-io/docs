@@ -110,7 +110,7 @@ const config: Config = {
       respectPrefersColorScheme: false,
     },
     navbar: {
-      title: 'Engress',
+      hideOnScroll: false,
       items: [
         {
           to: '/internal',
@@ -131,39 +131,6 @@ const config: Config = {
     },
     footer: {
       style: 'dark',
-      links: [
-        {
-          title: 'Get started',
-          items: [
-            {label: 'Downloads', to: '/downloads'},
-            {label: 'engress', to: '/agent'},
-            {label: 'Integrations', to: '/integrations'},
-          ],
-        },
-        {
-          title: 'Reference',
-          items: [
-            {label: 'API', to: '/api'},
-            {label: 'Security', to: '/security'},
-            {label: 'FAQ', to: '/faq'},
-            {label: 'llms.txt', href: 'https://engress.io/docs/llms.txt'},
-          ],
-        },
-        {
-          title: 'Staff',
-          items: [
-            {label: 'Internal docs', to: '/internal'},
-            {label: 'Oasis dashboard', href: 'https://engress.io/oasis'},
-          ],
-        },
-        {
-          title: 'Product',
-          items: [
-            {label: 'Open dashboard', href: 'https://engress.io'},
-            {label: 'Download agent', href: 'https://engress.io/downloads'},
-          ],
-        },
-      ],
       copyright: `© ${new Date().getFullYear()} Ghost Weasel Labs`,
     },
     prism: {

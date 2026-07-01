@@ -4,7 +4,7 @@ sidebar_position: 1
 title: Overview
 ---
 
-<span className="pill">DOCS</span>
+<span className="pill pill-synthesis">DOCS</span>
 
 # Engress
 
@@ -12,11 +12,15 @@ Expose a local AI model over HTTPS without opening inbound ports. Install **engr
 
 ## Quick start
 
+<div className="terminal-block">
+
 ```bash
 brew install engress-io/tap/engress
 engress login
 engress http 11434
 ```
+
+</div>
 
 Prefer a guided install? Use the [downloads page](/downloads) or [engress.io/downloads](https://engress.io/downloads).
 

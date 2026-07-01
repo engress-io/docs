@@ -1,6 +1,7 @@
 import React, {useCallback, useEffect, useState, type ReactNode} from 'react';
 import {SignInButton, useAuth} from '@clerk/react';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
+import Link from '@docusaurus/Link';
 
 type GateState = 'loading' | 'denied' | 'allowed';
 
@@ -64,7 +65,8 @@ export default function InternalDocsGate({children}: {children: ReactNode}) {
 
   if (!clerkKey) {
     return (
-      <div className="container margin-vert--lg">
+      <div className="gate-panel">
+        <span className="pill pill-warning">Staff only</span>
         <h1>Internal documentation</h1>
         <p>{detail || 'Clerk publishable key not configured.'}</p>
       </div>
@@ -73,15 +75,17 @@ export default function InternalDocsGate({children}: {children: ReactNode}) {
 
   if (!isLoaded || state === 'loading') {
     return (
-      <div className="container margin-vert--lg">
-        <p>Checking access…</p>
+      <div className="gate-panel">
+        <span className="pill pill-synthesis">Checking access</span>
+        <p>Verifying your staff session…</p>
       </div>
     );
   }
 
   if (state === 'denied') {
     return (
-      <div className="container margin-vert--lg">
+      <div className="gate-panel">
+        <span className="pill pill-warning">Staff only</span>
         <h1>Internal documentation</h1>
         <p>{detail}</p>
         {!isSignedIn && (
@@ -92,7 +96,7 @@ export default function InternalDocsGate({children}: {children: ReactNode}) {
           </SignInButton>
         )}
         <p className="margin-top--lg">
-          <a href="/">← Back to public documentation</a>
+          <Link to="/">← Back to public documentation</Link>
         </p>
       </div>
     );
