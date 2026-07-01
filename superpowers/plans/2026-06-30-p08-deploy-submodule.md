@@ -1,8 +1,8 @@
-# P06 — Deploy Submodule & Infra Safety — Implementation Plan
+# P08 — Deploy Submodule & Infra Safety — Implementation Plan
 
 > **Goal:** Create `engress-io/deploy` submodule, consolidate infrastructure assets, and make accidental destruction structurally difficult.
 
-**Design spec:** `specs/2026-06-30-p06-deploy-submodule-design.md`
+**Design spec:** `specs/2026-06-30-p08-deploy-submodule-design.md`
 
 **Related incident:** 2026-06-30 west EKS + GA destroyed by `apply-eks` with partial `-var` flags; recovered manually.
 
@@ -36,8 +36,8 @@ Copy structure from design spec (empty stacks, `modules/`, `guards/`, `agents/`)
 ### 0.3 Docs
 
 - [ ] `deploy/README.md` — layer diagram, dispatch cheatsheet
-- [ ] `specs/2026-06-30-p06-deploy-submodule-design.md` (this design)
-- [ ] Update superproject `AGENTS.md` with P06 status block
+- [ ] `specs/2026-06-30-p08-deploy-submodule-design.md` (this design)
+- [ ] Update superproject `AGENTS.md` with P08 status block
 
 **Exit criteria:** Submodule clones; no behavior change.
 
