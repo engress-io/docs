@@ -23,7 +23,22 @@ const config: Config = {
     mermaid: true,
   },
 
-  themes: ['@docusaurus/theme-mermaid'],
+  themes: [
+    '@docusaurus/theme-mermaid',
+    [
+      require.resolve('@easyops-cn/docusaurus-search-local'),
+      {
+        hashed: true,
+        docsRouteBasePath: '/',
+        docsDir: 'docs',
+        indexBlog: false,
+        indexPages: false,
+        highlightSearchTermsOnTargetPage: true,
+        // Public docs only — internal atlas is client-gated (G19) and must not ship in the index.
+        ignoreFiles: [/^internal(\/|$)/],
+      } satisfies import('@easyops-cn/docusaurus-search-local').PluginOptions,
+    ],
+  ],
 
   organizationName: 'engress-io',
   projectName: 'docs',
@@ -63,6 +78,27 @@ const config: Config = {
         path: 'internal',
         routeBasePath: 'internal',
         sidebarPath: './sidebars-internal.ts',
+      },
+    ],
+    'docusaurus-plugin-copy-page-button',
+    [
+      'docusaurus-plugin-llms',
+      {
+        title: 'Engress Documentation',
+        description:
+          'Tunnel local AI models over HTTPS with engress — CLI, integrations, and API reference.',
+        docsDir: 'docs',
+        ignoreFiles: ['internal/**'],
+        includeBlog: false,
+        generateLLMsTxt: true,
+        generateLLMsFullTxt: true,
+        excludeImports: true,
+        removeDuplicateHeadings: true,
+        rootContent: `Engress exposes local AI servers (Ollama, LM Studio, vLLM, etc.) on stable HTTPS URLs without opening inbound firewall ports.
+
+- Product: https://engress.io
+- Downloads: https://engress.io/downloads
+- Dashboard: https://engress.io`,
       },
     ],
   ],
@@ -110,6 +146,7 @@ const config: Config = {
             {label: 'API', to: '/api'},
             {label: 'Security', to: '/security'},
             {label: 'FAQ', to: '/faq'},
+            {label: 'llms.txt', href: 'https://engress.io/docs/llms.txt'},
           ],
         },
         {

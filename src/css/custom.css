@@ -71,6 +71,21 @@
   --ifm-global-radius: var(--r-md);
 }
 
+/* Local search (Algolia-style modal, @easyops-cn/docusaurus-search-local) */
+:root {
+  --search-local-highlight-color: var(--synthesis-bright);
+  --search-local-hit-active-color: var(--fg);
+  --search-local-modal-background: var(--surface-2);
+  --search-local-hit-background: var(--surface-1);
+  --search-local-hit-color: var(--fg-body);
+  --search-local-muted-color: var(--fg-muted);
+}
+
+html[data-theme='dark'] {
+  --search-local-highlight-color: var(--synthesis-bright);
+  --search-local-modal-shadow: inset 1px 1px 0 0 #161b21, 0 8px 24px 0 rgba(0, 0, 0, 0.45);
+}
+
 html,
 body {
   background: var(--bg);
