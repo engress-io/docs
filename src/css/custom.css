@@ -78,6 +78,17 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* Mermaid diagrams */
+.mermaid {
+  margin: 1.5rem 0 2rem;
+  text-align: center;
+}
+
+.mermaid svg {
+  max-width: 100%;
+  height: auto;
+}
+
 /* Navbar */
 .navbar {
   border-bottom: 1px solid var(--border);

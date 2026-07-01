@@ -19,6 +19,12 @@ const config: Config = {
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
 
+  markdown: {
+    mermaid: true,
+  },
+
+  themes: ['@docusaurus/theme-mermaid'],
+
   organizationName: 'engress-io',
   projectName: 'docs',
 
@@ -127,6 +133,9 @@ const config: Config = {
       theme: prismThemes.dracula,
       darkTheme: prismThemes.dracula,
       additionalLanguages: ['bash', 'yaml', 'powershell'],
+    },
+    mermaid: {
+      theme: {light: 'neutral', dark: 'dark'},
     },
   } satisfies Preset.ThemeConfig,
 };
